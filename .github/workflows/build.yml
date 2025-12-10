@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-mac:
-    runs-on: macos-latest
+  build-mac-intel:
+    runs-on: macos-13  # Intel Mac runner
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,11 +21,10 @@ jobs:
         run: |
           pip install pyinstaller customtkinter pillow PyPDF2 openai requests reportlab
 
-      - name: Build Universal Mac App
+      - name: Build Mac App (Intel)
         run: |
           CTK_PATH=$(python -c "import customtkinter; print(customtkinter.__path__[0])")
           pyinstaller --noconfirm --onedir --windowed \
-            --target-arch universal2 \
             --add-data="${CTK_PATH}:customtkinter/" \
             --add-data="logo.png:." \
             --add-data="settings_icon.png:." \
@@ -41,5 +40,5 @@ jobs:
       - name: Upload Mac Build
         uses: actions/upload-artifact@v4
         with:
-          name: Mac-Build
+          name: Mac-Build-Intel
           path: dist/AI_Talent_Matcher.zip
