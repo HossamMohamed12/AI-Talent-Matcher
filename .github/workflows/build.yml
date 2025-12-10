@@ -1,0 +1,60 @@
+name: Build Mac and Windows Apps
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller customtkinter pillow PyPDF2 openai requests reportlab
+
+      - name: Build Windows EXE
+        run: |
+          $CTK_PATH = python -c "import customtkinter; print(customtkinter.__path__[0])"
+          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH};customtkinter/" --name="AI_Talent_Matcher" main.py
+        shell: powershell
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows-Build
+          path: dist/AI_Talent_Matcher/
+
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller customtkinter pillow PyPDF2 openai requests reportlab
+
+      - name: Build Mac App
+        run: |
+          CTK_PATH=$(python -c "import customtkinter; print(customtkinter.__path__[0])")
+          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH}:customtkinter/" --name="AI_Talent_Matcher" main.py
+
+      - name: Upload Mac Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Mac-Build
+          path: dist/AI_Talent_Matcher.app/
