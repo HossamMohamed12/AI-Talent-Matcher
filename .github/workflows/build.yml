@@ -21,10 +21,17 @@ jobs:
         run: |
           pip install pyinstaller customtkinter pillow PyPDF2 openai requests reportlab
 
-      - name: Build Mac App
+      - name: Build Universal Mac App
         run: |
           CTK_PATH=$(python -c "import customtkinter; print(customtkinter.__path__[0])")
-          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH}:customtkinter/" --add-data="logo.png:." --add-data="settings_icon.png:." --add-data="cloud_upload_icon.png:." --name="AI_Talent_Matcher" main.py
+          pyinstaller --noconfirm --onedir --windowed \
+            --target-arch universal2 \
+            --add-data="${CTK_PATH}:customtkinter/" \
+            --add-data="logo.png:." \
+            --add-data="settings_icon.png:." \
+            --add-data="cloud_upload_icon.png:." \
+            --name="AI_Talent_Matcher" \
+            main.py
 
       - name: Create Mac ZIP
         run: |
