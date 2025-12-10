@@ -24,7 +24,7 @@ jobs:
       - name: Build Windows EXE
         run: |
           $CTK_PATH = python -c "import customtkinter; print(customtkinter.__path__[0])"
-          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH};customtkinter/" --name="AI_Talent_Matcher" main.py
+          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH};customtkinter/" --add-data="logo.png;." --add-data="settings_icon.png;." --add-data="cloud_upload_icon.png;." --add-data="logo.ico;." --icon="logo.ico" --name="AI_Talent_Matcher" main.py
         shell: powershell
 
       - name: Upload Windows Build
@@ -51,7 +51,7 @@ jobs:
       - name: Build Mac App
         run: |
           CTK_PATH=$(python -c "import customtkinter; print(customtkinter.__path__[0])")
-          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH}:customtkinter/" --name="AI_Talent_Matcher" main.py
+          pyinstaller --noconfirm --onedir --windowed --add-data="${CTK_PATH}:customtkinter/" --add-data="logo.png:." --add-data="settings_icon.png:." --add-data="cloud_upload_icon.png:." --name="AI_Talent_Matcher" main.py
 
       - name: Upload Mac Build
         uses: actions/upload-artifact@v4
